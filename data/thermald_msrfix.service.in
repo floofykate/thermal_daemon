@@ -1,0 +1,9 @@
+[Unit]
+Description=Thermal Daemon MSR Fix
+Before=thermald.service
+
+[Service]
+ExecStart=@bindir@/thermald_msrfix.sh
+
+[Install]
+WantedBy=thermald.service

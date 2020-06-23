@@ -36,16 +36,20 @@ make %{?_smp_mflags}
 %make_install DESTDIR=%{buildroot}
 
 %post
+%systemd_post thermald_msrfix.service
 %systemd_post thermald.service
 
 %preun
+%systemd_preun thermald_msrfix.service
 %systemd_preun thermald.service
 
 %postun
 %systemd_postun_with_restart thermald.service
+%systemd_postun_with_restart thermald_msrfix.service
 
 %files
 %{_sbindir}/thermald
+%{_bindir}/thermald_msrfix.sh
 %config(noreplace) %{_sysconfdir}/dbus-1/system.d/org.freedesktop.thermald.conf
 %{_datadir}/dbus-1/system-services/org.freedesktop.thermald.service
 %config(noreplace) %{_sysconfdir}/thermald/thermal-conf.xml
@@ -54,9 +58,12 @@ make %{?_smp_mflags}
 %{_mandir}/man8/thermald.8.gz
 %{_mandir}/man5/thermal-conf.xml.5.gz
 %{_unitdir}/thermald.service
+%{_unitdir}/thermald_msrfix.service
 %exclude %{_sysconfdir}/init
 
 %changelog
+* Tue Jun 23 2020 Katherine Floof <kat@floofy.club> 1.6-2
+- Fixed MSR permission issues
 * Mon Apr 03 2017 James Ye <jye836@gmail.com> 1.6-1
 - Updated to thermal daemon 1.6
 * Tue Oct 25 2016 Michael P. Moran <> 1.5-4
